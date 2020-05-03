@@ -1,3 +1,7 @@
+// To regenerate python proto file:
+//   $ protoc --python_out=./ exampledb.proto
+syntax = "proto2";
+
 // A single example sentence.
 message Example {
   optional string chinese = 1;
@@ -12,6 +16,9 @@ message Example {
     MANUAL = 3;
   }
   optional Source source = 3;
+
+  // Unix timestamp (in seconds) when this example was fetched / created.
+  optional double created_ts = 4;
 }
 
 // A set of example sentences for a given word.

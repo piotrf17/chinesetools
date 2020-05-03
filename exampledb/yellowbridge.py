@@ -9,7 +9,7 @@ import unicodedata
 import urllib
 from bs4 import BeautifulSoup
 
-import scraper
+from exampledb import scraper
 
 SENTENCE_URL_BASE = 'http://www.yellowbridge.com/chinese/sentsearch.php?word='
 

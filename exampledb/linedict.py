@@ -7,7 +7,7 @@ import urllib
 import json
 from bs4 import BeautifulSoup
 
-import scraper
+from exampledb import scraper
 
 SENTENCE_URL_BASE = 'http://linedict.naver.com/cnen/example/search.dict?page=1&page_size=20&examType=normal&fieldType=&author=&country=&ql=default&format=json&platform=isPC&'
 
