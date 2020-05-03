@@ -272,7 +272,7 @@ class Dict:
 
 
 if __name__ == "__main__":
-  import config
   logging.basicConfig(level=logging.INFO)
+  import config
   d = Dict(config.get_data_dir())
   print(d.entries[u'差'])

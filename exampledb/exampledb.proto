@@ -1,0 +1,22 @@
+// A single example sentence.
+message Example {
+  optional string chinese = 1;
+
+  // Not all example sentences have an english translation.
+  optional string english = 2;
+
+  enum Source {
+    ICIBA = 0;
+    LINEDICT = 1;
+    YELLOWBRIDGE = 2;
+    MANUAL = 3;
+  }
+  optional Source source = 3;
+}
+
+// A set of example sentences for a given word.
+message WordEntry {
+  optional string word = 1;
+
+  repeated Example examples = 2;
+}
