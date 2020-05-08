@@ -1,4 +1,5 @@
 __pycache__
+*.pyc
 config.json
 learning_summary.html
 data/examples.db

@@ -17,3 +17,9 @@ def get_data_dir():
 
 def get_anki_collection():
   return get_config()['anki_collection']
+
+def get_example_db_path():
+  return os.path.join(get_data_dir(), 'examples.db')
+
+def get_pending_anki_csv():
+  return get_config()['pending_anki_csv']

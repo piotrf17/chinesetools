@@ -2,6 +2,9 @@
 """Dictionary for both characters and words.
 
 Data comes from CC-CEDICT as well as a character frequency table.
+
+TODO(piotrf): consider building a sql database for the dictionary, with this
+file turned in to a script to pull together data sources to recreate the db.
 """
 
 from dataclasses import dataclass, field

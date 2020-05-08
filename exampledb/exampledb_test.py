@@ -10,11 +10,11 @@ TODO(piotrf): make this actually a test
 
 import os
 
-from common import  config
+from common import config
 from exampledb import exampledb
 
 if __name__ == "__main__":
-  db = exampledb.ExampleDb(os.path.join(config.get_data_dir(), 'examples.db'))
+  db = exampledb.ExampleDb(config.get_example_db_path())
   examples = db.get_examples(u'加剧')
   for example in examples:
     print('Chinese: {}'.format(example.chinese))

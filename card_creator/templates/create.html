@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>Card Creator!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="{{ url_for('static', filename='js/jquery-3.5.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vue.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stdtheme.css') }}">    
+  </head>
+  <body>
+    <div id="container" style="width:100%">
+    <div id="app" style="float:left; width:50%;">
+      <template v-if="mode == 0 /* PICK_SENTENCES */">
+	<h1>Creating cards for {% raw %}{{ word }}{% endraw %}</h1>
+	<h3>Definitions</h3>
+	<ul>
+	  <li v-for="(def, index) in definitions">
+	    <input type="checkbox" v-model="pickedDefinitions[index]">
+	    <span>
+	      ({% raw %}{{ def.pinyin_diacritic }}{% endraw %}) {% raw %}{{ def.meaning }}{% endraw %}
+	    </span>
+	  </li>
+	</ul>
+	<h3>Examples</h3>
+	<ul>
+	  <li v-for="(example, index) in examples">
+	    <input type="checkbox" v-model="pickedExamples[index]">
+	    {% raw %}{{ example.chinese }}{% endraw %}
+	    <br>
+	    {% raw %}{{ example.english }}{% endraw %}
+	  </li>
+	</ul>
+	<div>
+    	  <span>Add a sentence:</span>
+	  <input v-model="pendingSentence">
+	  <button v-on:click="addPendingSentence">Add</button>
+	</div>
+	<br>
+	<button v-on:click="createCards">Create!</button>
+      </template>
+      <template v-if="mode == 1 /* CREATE_CARDS */">
+	<h1>Pending Cards</h1>
+	<table v-for="(card, index) in cards" class="card">
+	  <tr class="card">
+	    <td>Front (Example blanked out)</td>
+	    <td><input v-model="cards[index].frontExample"></td>
+	  </tr>
+	  <tr>
+	    <td>Front (Picture)</td>
+	    <td>N/A</td>
+	  </tr>
+	  <tr>
+	    <td>Front (Definitions, base word, etc)</td>
+	    <td><input v-model="cards[index].frontHints"></td>
+	  </tr>
+	  <tr>
+	    <td>Back (a single word)</td>
+	    <td><input v-model="cards[index].backWord"></td>
+	  </tr>
+	  <tr>
+	    <td>The full sentence</td>
+	    <td><input v-model="cards[index].sentence"></td>
+	  </tr>
+	  <tr>
+	    <td>Extra info</td>
+	    <td><input v-model="cards[index].info"></td>
+	  </tr>
+	  <tr>
+	    <td>Create 2 cards?</td>
+	    <td><input v-model="cards[index].twoCards"></td>
+	  </tr>
+	</table>
+	<button v-on:click="outputCards">Output {% raw %}{{ cards.length }}{% endraw %} cards</button>
+      </template>
+    </div>
+    <!--
+    <div style="float:right; width:50%;">
+      <iframe src="http://images.baidu.com/" width="100%" height="1000px">
+	<p>WTF no iframes.</p>
+      </iframe>
+    </div>
+-->
+    </div>
+  </body>
+  <script type="text/javascript">
+    var word = '{{ word }}';
+  </script>
+  <script src="{{ url_for('static', filename='js/card_creator.js') }}"></script>
+<html>
