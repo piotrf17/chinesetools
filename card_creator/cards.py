@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, jsonify, g, request, current_app
 
+from common.anki import AnkiReader
 from common.cdict import Dict
 from exampledb.exampledb import ExampleDb
 
@@ -21,6 +22,11 @@ def get_example_db():
   return g.example_db
 
 
+def get_anki_reader():
+  if 'anki_reader' not in g:
+    g.anki_reader = AnkiReader(current_app.config['ANKI_COLLECTION'])
+  return g.anki_reader
+
 @bp.route('/')
 def index():
   return render_template('index.html')
@@ -29,6 +35,8 @@ def index():
 @bp.route("/api/lookup/<word>")
 def lookup(word):
   data = {}
+
+  # Get definition.
   entry = get_dict().entries[word]
   data["definitions"] = []
   for meaning in entry.meanings:
@@ -36,6 +44,13 @@ def lookup(word):
     definition["pinyin_diacritic"] = meaning.pinyin_diacritic
     definition["meaning"] = meaning.meaning
     data["definitions"].append(definition)
+
+  # Get anki cards.
+  reader = get_anki_reader()
+  data["legacy_word_cards"] = reader.get_legacy_word_cards(word)
+  data["word_cards"] = reader.get_word_cards(word)
+
+  # Get example sentences.
   db_examples = get_example_db().get_examples(word)
   data["examples"] = []  
   for db_example in db_examples:
@@ -43,6 +58,7 @@ def lookup(word):
     example["chinese"] = db_example.chinese
     example["english"] = db_example.english
     data["examples"].append(example)
+
   return jsonify(data)
 
 
@@ -57,6 +73,6 @@ def add_cards():
   return jsonify({'success': True})
 
 
-@bp.route("/create/<word>")
-def create(word):
-  return render_template('create.html', word=word)
+@bp.route("/words/<word>")
+def info(word):
+  return render_template('word.html', word=word)

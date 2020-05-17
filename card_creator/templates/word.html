@@ -4,23 +4,49 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <script src="{{ url_for('static', filename='js/jquery-3.5.1.js') }}"></script>
     <script src="{{ url_for('static', filename='js/vue.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/stdtheme.css') }}">    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stdtheme.css') }}">
   </head>
   <body>
-    <div id="container" style="width:100%">
-    <div id="app" style="float:left; width:50%;">
-      <template v-if="mode == 0 /* PICK_SENTENCES */">
-	<h1>Creating cards for {% raw %}{{ word }}{% endraw %}</h1>
-	<h3>Definitions</h3>
+    <div id="app">
+      <div v-if="mode == 0 /* VIEW_INFO */ || mode == 1 /* PICK_SENTENCES */">
+	<h1>{{ word }}</h1>
+	<h2>Definitions</h2>
 	<ul>
 	  <li v-for="(def, index) in definitions">
-	    <input type="checkbox" v-model="pickedDefinitions[index]">
+	    <input v-if="mode == 1 /* PICK_SENTENCES */" type="checkbox" v-model="pickedDefinitions[index]">
 	    <span>
 	      ({% raw %}{{ def.pinyin_diacritic }}{% endraw %}) {% raw %}{{ def.meaning }}{% endraw %}
 	    </span>
 	  </li>
 	</ul>
-	<h3>Examples</h3>
+      </div>
+      <div v-if="mode == 0 /* VIEW_INFO */">
+	<h2>Word Cards</h2>
+	<table class="existing_cards">
+          <tr v-for="card in legacyWordCards">
+	    <td>
+	      (legacy) {% raw %}{{ card[0] }}{% endraw %}
+	    </td>
+	    <td>
+	      {% raw %}{{ card[1] }}{% endraw %} <br><br>
+	      {% raw %}{{ card[2] }}{% endraw %}
+	    </td>
+          </tr>
+	  <tr v-for="card in wordCards">
+	    <td>
+	      {% raw %}{{ card[0] }}{% endraw %} <br><br>
+	      <span style="color:red">{% raw %}{{ card[2] }}{% endraw %}</span>
+	    </td>
+	    <td>
+	      {% raw %}{{ card[4] }}{% endraw %} <br><br>
+	      <span style="color:grey">{% raw %}{{ card[5] }}{% endraw %}</span>
+            </td>
+	  </tr>
+	</table>
+	<button v-on:click="addCards">Add more cards</button>
+      </div>
+      <div v-if="mode == 1 /* PICK_SENTENCES */">
+      	<h3>Examples</h3>
 	<ul>
 	  <li v-for="(example, index) in examples">
 	    <input type="checkbox" v-model="pickedExamples[index]">
@@ -35,9 +61,10 @@
 	  <button v-on:click="addPendingSentence">Add</button>
 	</div>
 	<br>
+	<button v-on:click="cancelAddCards">Cancel</button>
 	<button v-on:click="createCards">Create!</button>
-      </template>
-      <template v-if="mode == 1 /* CREATE_CARDS */">
+      </div>
+      <div v-if="mode == 2 /* CREATE_CARDS */">
 	<h1>Pending Cards</h1>
 	<table v-for="(card, index) in cards" class="card">
 	  <tr class="card">
@@ -70,19 +97,11 @@
 	  </tr>
 	</table>
 	<button v-on:click="outputCards">Output {% raw %}{{ cards.length }}{% endraw %} cards</button>
-      </template>
-    </div>
-    <!--
-    <div style="float:right; width:50%;">
-      <iframe src="http://images.baidu.com/" width="100%" height="1000px">
-	<p>WTF no iframes.</p>
-      </iframe>
-    </div>
--->
+      </div>
     </div>
   </body>
   <script type="text/javascript">
     var word = '{{ word }}';
   </script>
   <script src="{{ url_for('static', filename='js/card_creator.js') }}"></script>
-<html>
+</html>

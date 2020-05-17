@@ -120,7 +120,7 @@ class ReportGenerator:
       i = 0
       self.outfile.write('<p>HSK %d' % (l + 1))
       for w in self.d.hsk_words[l]:
-        card_creator_link = ('http://localhost:5000/create/' + w).encode('utf-8')
+        card_creator_link = 'http://localhost:5000/words/' + w
         url_style = 'text-decoration: none; color: black;'
       
         if i % 10 == 0:

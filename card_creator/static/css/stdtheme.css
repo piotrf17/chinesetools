@@ -28,3 +28,17 @@ table.card {
 .card input {
     width: 95%;
 }
+
+table.existing_cards {
+    table-layout: fixed;
+    border-spacing: 10px 30px;
+    margin: 20px 0px 20px 100px;
+}
+
+table.existing_cards td {
+    width: 500px;
+    height: 100px;
+    border: 2px solid black;
+    padding: 10px;
+    text-align: center;
+}

@@ -1,15 +1,18 @@
 var Modes = {
-  PICK_SENTENCES: 0,
-  CREATE_CARDS: 1,
+  VIEW_INFO: 0,
+  PICK_SENTENCES: 1,
+  CREATE_CARDS: 2,
 };
 
 var data = {
   word: word,
   definitions: [],
   pickedDefinitions: [],
+  legacyWordCards: [],
+  wordCards: [],
   examples: [],
   pickedExamples: [],
-  mode: Modes.PICK_SENTENCES,
+  mode: Modes.VIEW_INFO,
   cards: [],
   pendingSentence: '',
 };
@@ -22,13 +25,15 @@ function BlankOutExample(example, word) {
   return example.replace(word, '___');
 }
 
-var app = new Vue({
+const app = new Vue({
   el: '#app',
   data: data,
   created: function() {
     $.getJSON('/api/lookup/' + data.word).done(function(recvd) {
       data.definitions = recvd.definitions;
       data.examples = recvd.examples;
+      data.legacyWordCards = recvd.legacy_word_cards;
+      data.wordCards = recvd.word_cards;
     });
   },
   methods: {
@@ -38,6 +43,14 @@ var app = new Vue({
 	'english': '[ADDED]',
       });
       data.pendingSentence = '';
+    },
+    addCards: function(event) {
+      data.mode = Modes.PICK_SENTENCES;
+    },
+    cancelAddCards: function(event) {
+      data.pickedDefinitions = [];
+      data.pickedExamples = [];
+      data.mode = Modes.VIEW_INFO;
     },
     createCards: function(event) {
       // Verify that we actually picked something.

@@ -24,7 +24,7 @@ class AnkiReader:
     deck_id = self.decks[deck_name]
     notes = []
     for row in self.c.execute(
-        'SELECT flds FROM notes WHERE id in '
+        'SELECT flds FROM notes WHERE id IN '
         '(SELECT nid FROM cards WHERE did=?)', (deck_id,)):
       notes.append(row[0].split(u'\u001f'))
     return notes
@@ -43,6 +43,17 @@ class AnkiReader:
       words.append(note[0])
     return words
 
+  def get_legacy_word_cards(self, word):
+    notes = []
+    for row in self.c.execute(
+      'SELECT flds FROM notes WHERE flds LIKE ? AND id IN'
+      '(SELECT nid FROM cards WHERE did=?)', (
+        "%" + word + "%", self.decks['Chinese::Words'])):
+      note = row[0].split(u'\u001f')
+      if note[0] == word:
+        notes.append(note)
+    return notes
+
   def get_known_words(self):
     word_notes = self.get_notes('Chinese::General')
     words = []
@@ -56,3 +67,16 @@ class AnkiReader:
         words.append(word)
     words = list(set(words))
     return words
+
+  def get_word_cards(self, word):
+    notes = []
+    for row in self.c.execute(
+        'SELECT flds FROM notes WHERE flds LIKE ? AND id IN '
+        '(SELECT nid FROM cards WHERE did=?)', (
+          "%" + word + "%", self.decks['Chinese::General'])):
+      note = row[0].split(u'\u001f')
+      if len(note) == 2:
+        continue
+      if note[3] == word:
+        notes.append(note)
+    return notes
