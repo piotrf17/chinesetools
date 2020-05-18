@@ -23,3 +23,7 @@ def get_example_db_path():
 
 def get_pending_anki_csv():
   return get_config()['pending_anki_csv']
+
+def get_pending_char_csv():
+  return get_config()['pending_char_csv']
+

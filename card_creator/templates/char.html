@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <title>Card Creator!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="{{ url_for('static', filename='js/jquery-3.5.1.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stdtheme.css') }}">
+  </head>
+  <body>
+    <div>
+      <h1>{{ char }}</h1>
+      <h2>Definitions</h2>
+      <ul>
+	{% for def in definitions %}
+	<li>({{ def.pinyin_diacritic }}) {{ def.meaning }}</li>
+	{% endfor %}
+      </ul>
+      <h2>Cards</h2>
+      {% if cards %}
+      <table class="existing_cards">
+	{% for card in cards %}
+	<tr>
+	  <td>{{ card[0] }}</td>
+	  <td>{{ card[1] }}<br>{{ card[2] }}</td>
+	</tr>
+	{% endfor %}
+      </table>
+      {% else %}
+      <button onclick="add_card()">Add a card</button>
+      {% endif %}
+      <h2>Words Containing</h2>
+      <ul>
+        {% for word in words %}
+	<li>
+	  ({{ word[1] }})
+	  <a href="/word/{{ word[0] }}">{{ word[0] }}</a>
+	  {% if word[2] %}
+	  <span style="color:green">(known)</span>
+	  {% endif%}
+	</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </body>
+  <script>
+    function add_card() {
+      $.getJSON('/api/add_char/{{ char }}').done(function() {
+	window.alert('Added word!');
+      });
+    }
+  </script>
+</html>

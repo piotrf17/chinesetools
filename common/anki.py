@@ -36,6 +36,18 @@ class AnkiReader:
       chars.append(note[0])
     return chars
 
+  def get_character_cards(self, char):
+    notes = []
+    for row in self.c.execute(
+      'SELECT flds FROM notes WHERE flds LIKE ? AND id IN'
+      '(SELECT nid FROM cards WHERE did=?)', (
+        "%" + char + "%", self.decks['Chinese::Characters'])):
+      note = row[0].split(u'\u001f')
+      if note[0] == char:
+        notes.append(note)
+    return notes
+
+
   def get_known_legacy_words(self):
     word_notes = self.get_notes('Chinese::Words')
     words = []

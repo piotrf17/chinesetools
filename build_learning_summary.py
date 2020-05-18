@@ -87,6 +87,9 @@ class ReportGenerator:
     self.outfile.write('<h3>Characters by Frequency</h3>')
     i = 0
     for c in self.d.chars_by_frequency:
+      card_creator_link = 'http://localhost:5000/char/' + c
+      url_style = 'text-decoration: none; color: black;'
+
       if i > 0 and i % 50 == 0:
         self.outfile.write('<br>')
       if i > 0 and i % 1000 == 0:
@@ -95,7 +98,9 @@ class ReportGenerator:
       style = ''
       if not(c in self.known_chars):
         style = 'style="background-color:red;"'
-      self.outfile.write('<span {}>{}</span>'.format(style, c))
+      self.outfile.write(
+        '<a target="_blank" href="{}" style="{}"><span {}>{}</span></a>'.format(
+          card_creator_link, url_style, style, c))
       if i == 5000:
         return
 
@@ -105,13 +110,18 @@ class ReportGenerator:
       i = 0
       self.outfile.write('<p>HSK %d' % (l + 1))
       for c in self.d.hsk_chars[l]:
+        card_creator_link = 'http://localhost:5000/char/' + c
+        url_style = 'text-decoration: none; color: black;'
+        
         if i % 50 == 0:
           self.outfile.write('<br>')
         i += 1
         style = ''
         if not(c in self.known_chars):
           style = 'style="background-color:red;"'
-        self.outfile.write('<span {}>{}</span>'.format(style, c))
+        self.outfile.write(
+          '<a target="_blank" href="{}" style="{}"><span {}>{}</span></a>'.format(
+            card_creator_link, url_style, style, c))
       self.outfile.write('<br>')
 
   def write_hsk_word_table(self):
@@ -120,7 +130,7 @@ class ReportGenerator:
       i = 0
       self.outfile.write('<p>HSK %d' % (l + 1))
       for w in self.d.hsk_words[l]:
-        card_creator_link = 'http://localhost:5000/words/' + w
+        card_creator_link = 'http://localhost:5000/word/' + w
         url_style = 'text-decoration: none; color: black;'
       
         if i % 10 == 0:
@@ -164,9 +174,14 @@ class ReportGenerator:
     i = 0
     for c in chars_in_words:
       if not c in self.known_chars:
+        card_creator_link = 'http://localhost:5000/char/' + c
+        url_style = 'text-decoration: none; color: black;'
+
         if i > 0 and i % 50 == 0:
           self.outfile.write('<br>')
-        self.outfile.write(c)
+        self.outfile.write(
+          '<a target="_blank" href="{}" style="{}">{}</a>'.format(
+            card_creator_link, url_style, c))
         i += 1
 
   def write_footer(self):

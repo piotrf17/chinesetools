@@ -10,6 +10,7 @@ def create_app(test_config=None):
     SECRET_KEY='dev',
     EXAMPLE_DB=config.get_example_db_path(),
     PENDING_ANKI_CSV=config.get_pending_anki_csv(),
+    PENDING_CHAR_CSV=config.get_pending_char_csv(),
     ANKI_COLLECTION=config.get_anki_collection(),
     DATA_DIR=config.get_data_dir(),
   )

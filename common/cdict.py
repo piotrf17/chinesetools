@@ -151,6 +151,8 @@ class Dict:
     hsk_words: Similar to `hsk_chars`, but for words. Note that the HSK word
       lists do also include single character words, though not every character
       in `hsk_chars` also appears in `hsk_words`.
+    char_to_words: Map from a character to a list of tuples (word, frequency),
+      where frequency is given as the index in the sorted word frequency list.
   """
 
   def __init__(self, data_dir):
@@ -159,6 +161,7 @@ class Dict:
     self.chars_by_frequency = []
     self.hsk_chars = []
     self.hsk_words = []
+    self.char_to_words = {}
     
     logging.info('Loading cedict data...')
     self.load_cedict(os.path.join(data_dir, CEDICT_FILE))
@@ -234,6 +237,11 @@ class Dict:
           probability_mass_not_found += frequency
         else:
           self.entries[word].word_frequency = frequency
+
+        for char in set(word):
+          if char not in self.char_to_words:
+            self.char_to_words[char] = []
+          self.char_to_words[char].append((word, l-1))
       l += 1
 
     if num_not_found:
@@ -279,3 +287,4 @@ if __name__ == "__main__":
   import config
   d = Dict(config.get_data_dir())
   print(d.entries[u'差'])
+  print(d.char_to_words[u'差'])

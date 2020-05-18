@@ -31,7 +31,6 @@ const app = new Vue({
   created: function() {
     $.getJSON('/api/lookup/' + data.word).done(function(recvd) {
       data.definitions = recvd.definitions;
-      data.examples = recvd.examples;
       data.legacyWordCards = recvd.legacy_word_cards;
       data.wordCards = recvd.word_cards;
     });
@@ -46,6 +45,9 @@ const app = new Vue({
     },
     addCards: function(event) {
       data.mode = Modes.PICK_SENTENCES;
+      $.getJSON('/api/examples/' + data.word).done(function(recvd) {
+	data.examples = recvd.examples;
+      });
     },
     cancelAddCards: function(event) {
       data.pickedDefinitions = [];

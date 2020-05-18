@@ -11,7 +11,7 @@
       <div v-if="mode == 0 /* VIEW_INFO */ || mode == 1 /* PICK_SENTENCES */">
 	<h1>{{ word }}</h1>
 	<h2>Definitions</h2>
-	<ul>
+	<ul v-if="definitions.length > 0">
 	  <li v-for="(def, index) in definitions">
 	    <input v-if="mode == 1 /* PICK_SENTENCES */" type="checkbox" v-model="pickedDefinitions[index]">
 	    <span>
@@ -19,6 +19,9 @@
 	    </span>
 	  </li>
 	</ul>
+	<span v-else>
+	  No definition found!
+        </span>
       </div>
       <div v-if="mode == 0 /* VIEW_INFO */">
 	<h2>Word Cards</h2>

@@ -1,6 +1,6 @@
 $('#create').click(function() {
   word = $('input').val();
-  window.location.href = '/words/' + word;
+  window.location.href = '/word/' + word;
   return false;
 });
 
