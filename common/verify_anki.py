@@ -39,7 +39,7 @@ def check_legacy_word_deck(reader):
 
 
 def check_word_deck(reader):
-  notes = reader.get_notes('Chinese::General')
+  notes = reader.get_notes(u'Chinese\x1fGeneral')
   print('Verifying {} general deck notes'.format(len(notes)))
   legacy_general_notes = 0
   notes_without_word = 0

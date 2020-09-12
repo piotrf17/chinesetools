@@ -15,10 +15,11 @@ class AnkiReader:
 
     # Read the decks in the table.
     self.decks = {}
-    self.c.execute('SELECT decks FROM col')
-    deck_infos = json.loads(self.c.fetchone()[0])
-    for creation_time, deck_info in deck_infos.items():
-      self.decks[deck_info['name']] = int(deck_info['id'])
+    for row in self.c.execute('SELECT * FROM decks'):
+      name = row[1]
+      deck_id = int(row[0])
+      self.decks[name] = deck_id
+    print(self.decks)
 
   def get_notes(self, deck_name):
     deck_id = self.decks[deck_name]
@@ -30,7 +31,7 @@ class AnkiReader:
     return notes
 
   def get_known_characters(self):
-    char_notes = self.get_notes('Chinese::Characters')
+    char_notes = self.get_notes(u'Chinese\x1fCharacters')
     chars = []
     for note in char_notes:
       chars.append(note[0])
@@ -41,7 +42,7 @@ class AnkiReader:
     for row in self.c.execute(
       'SELECT flds FROM notes WHERE flds LIKE ? AND id IN'
       '(SELECT nid FROM cards WHERE did=?)', (
-        "%" + char + "%", self.decks['Chinese::Characters'])):
+        "%" + char + "%", self.decks[u'Chinese\x1fCharacters'])):
       note = row[0].split(u'\u001f')
       if note[0] == char:
         notes.append(note)
@@ -49,7 +50,7 @@ class AnkiReader:
 
 
   def get_known_legacy_words(self):
-    word_notes = self.get_notes('Chinese::Words')
+    word_notes = self.get_notes(u'Chinese\x1fWords')
     words = []
     for note in word_notes:
       words.append(note[0])
@@ -60,14 +61,14 @@ class AnkiReader:
     for row in self.c.execute(
       'SELECT flds FROM notes WHERE flds LIKE ? AND id IN'
       '(SELECT nid FROM cards WHERE did=?)', (
-        "%" + word + "%", self.decks['Chinese::Words'])):
+        "%" + word + "%", self.decks[u'Chinese\x1fWords'])):
       note = row[0].split(u'\u001f')
       if note[0] == word:
         notes.append(note)
     return notes
 
   def get_known_words(self):
-    word_notes = self.get_notes('Chinese::General')
+    word_notes = self.get_notes(u'Chinese\x1fGeneral')
     words = []
     for note in word_notes:
       # Skip legacy front/back cards.
@@ -85,7 +86,7 @@ class AnkiReader:
     for row in self.c.execute(
         'SELECT flds FROM notes WHERE flds LIKE ? AND id IN '
         '(SELECT nid FROM cards WHERE did=?)', (
-          "%" + word + "%", self.decks['Chinese::General'])):
+          "%" + word + "%", self.decks[u'Chinese\x1fGeneral'])):
       note = row[0].split(u'\u001f')
       if len(note) == 2:
         continue

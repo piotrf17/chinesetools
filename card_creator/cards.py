@@ -87,6 +87,7 @@ def add_cards():
     for card in request.get_json():
       row = [
         card['frontExample'],
+        '',
         card['frontHints'],
         card['backWord'],
         card['sentence'],
