@@ -19,7 +19,7 @@ class LineDictScraper(scraper.BaseScraper):
     sentence_url = SENTENCE_URL_BASE + urllib.parse.urlencode(params)
     data = json.loads(self._get(sentence_url))
     for example in data['exampleList']:
-      sentences.append((example['example'], example['recentTrslation']))
+      sentences.append((example['example'], example['translation']))
     return sentences
 
   
