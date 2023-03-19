@@ -93,6 +93,10 @@ def add_cards():
         card['sentence'],
         card['info'],
         card['twoCards'],
+        # BANDAID(piotrf): as of 2023/03/19, anki seems to want another field
+        # for "twoCards" to be processed correctly. Unclear why, so as a bandaid
+        # just add a blank field here to force another semicolon.
+        '',   
       ]
       writer.writerow(row)
   return jsonify({'success': True})
