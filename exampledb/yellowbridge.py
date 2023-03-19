@@ -6,7 +6,7 @@ NOTE: the english translations this scraper provides are a little broken.
 
 import logging
 import unicodedata
-import urllib
+import urllib.parse
 from bs4 import BeautifulSoup
 
 from exampledb import scraper

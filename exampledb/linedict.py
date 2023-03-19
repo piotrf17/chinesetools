@@ -3,7 +3,7 @@
 """
 
 import logging
-import urllib
+import urllib.parse
 import json
 from bs4 import BeautifulSoup
 

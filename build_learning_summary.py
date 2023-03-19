@@ -37,6 +37,10 @@ class ReportGenerator:
     known_trad_chars = [u'乾',u'於',u'後']
     self.known_chars |= set(known_trad_chars)
 
+    self.general_standard_chars = []
+    for line in open('data/table_of_general_standard_chinese_characters.txt').readlines():
+      self.general_standard_chars.append(line.split()[1])
+
   def write_header(self):
     self.outfile.write("""
 <html>
@@ -82,6 +86,28 @@ class ReportGenerator:
     self.outfile.write('</table>')
     self.outfile.write('<br>')
 
+  def write_general_standard_chars(self):
+    self.outfile.write('<h3>通用规范汉字表</h3>')
+    titles = ['<h4>一级字表</h4>', '<h4>二级字表</h4>', '<h4>三级字表</h4>']
+    ranges = [(0, 3500), (3500, 6500), (6500, -1)]
+    for j in range(3):
+      self.outfile.write(titles[j])
+      i = 0
+      for c in self.general_standard_chars[ranges[j][0]:ranges[j][1]]:
+        card_creator_link = 'http://localhost:5000/char/' + c
+        url_style = 'text-decoration: none; color: black;'
+
+        if i > 0 and i % 50 == 0:
+          self.outfile.write('<br>')
+        if i > 0 and i % 1000 == 0:
+          self.outfile.write('<br>')
+        i += 1
+        style = ''
+        if not(c in self.known_chars):
+          style = 'style="background-color:red;"'
+        self.outfile.write(
+          '<a target="_blank" href="{}" style="{}"><span {}>{}</span></a>'.format(
+            card_creator_link, url_style, style, c))
 
   def write_frequency_table(self):
     self.outfile.write('<h3>Characters by Frequency</h3>')
@@ -192,11 +218,12 @@ class ReportGenerator:
   def write_report(self):
     self.write_header()
     self.write_coverage()
-    self.write_frequency_table()
+    self.write_general_standard_chars()
     self.write_hsk_char_table()
     self.write_hsk_word_table()
     self.write_chars_with_no_words()
     self.write_not_learned_chars_in_words()
+    self.write_frequency_table()
     self.write_footer()
 
 def main(argv):
